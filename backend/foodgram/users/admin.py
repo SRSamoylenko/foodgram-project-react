@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import User
+from .models import User, Follow
 from .constants import EMPTY_VALUE_MESSAGE
 
 
@@ -12,5 +12,19 @@ class User(admin.ModelAdmin):
         'email',
         'first_name',
         'last_name',
+    )
+    empty_value_display = EMPTY_VALUE_MESSAGE
+
+
+@admin.register(Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'from_user',
+        'to_user',
+    )
+    list_filter = (
+        'from_user',
+        'to_user',
     )
     empty_value_display = EMPTY_VALUE_MESSAGE

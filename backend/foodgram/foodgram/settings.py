@@ -84,10 +84,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
+    'EXCEPTION_HANDLER': 'api.views.exception_handler',
 }
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
+    'SERIALIZERS': {
+        'user': 'users.serializers.UserSerializer',
+        'current_user': 'users.serializers.UserSerializer',
+    },
     'PERMISSIONS': {
         'user_list': ['rest_framework.permissions.AllowAny'],
         'user': ['rest_framework.permissions.IsAuthenticated'],
