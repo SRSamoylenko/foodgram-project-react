@@ -17,9 +17,9 @@ class User(AbstractUser):
         max_length=150
     )
     following = models.ManyToManyField(
-        to="self",
-        through="Follow",
-        related_name="followers",
+        to='self',
+        through='Follow',
+        related_name='followers',
         symmetrical=False,
         verbose_name=_('Following'),
     )
@@ -67,5 +67,5 @@ class Follow(models.Model):
 
     def __str__(self):
         return (
-            f'{self.from_user} follows {self.to_user}'
+            _('{} follows {}').format(self.from_user, self.to_user)
         )
