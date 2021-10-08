@@ -16,15 +16,27 @@ class Recipe(models.Model):
 
 
 class Ingredient(models.Model):
-    ...
-    # name
-    # measurement_unit
+    name = models.CharField(
+        verbose_name=_('Ingredient name'),
+        max_length=150,
+        unique=True,
+    )
+    measurement_unit = models.CharField(
+        verbose_name=_('Measurement unit'),
+        max_length=25,
+    )
+
+    class Meta:
+        verbose_name = _('Ingredient')
+        verbose_name_plural = _('Ingredients')
+        ordering = ('name',)
 
 
 class Tag(models.Model):
     name = models.CharField(
         verbose_name=_('Tag name'),
         max_length=150,
+        unique=True,
     )
     colour = ColorField(
         verbose_name=_('Tag color'),
@@ -32,6 +44,7 @@ class Tag(models.Model):
     )
     slug = models.SlugField(
         verbose_name=_('Slug'),
+        unique=True,
     )
 
     class Meta:
