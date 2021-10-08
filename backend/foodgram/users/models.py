@@ -5,15 +5,15 @@ from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
     email = models.EmailField(
-        _('email address'),
+        verbose_name=_('Email address'),
         unique=True
     )
     first_name = models.CharField(
-        _('first name'),
+        verbose_name=_('First name'),
         max_length=150
     )
     last_name = models.CharField(
-        _('last name'),
+        verbose_name=_('Last name'),
         max_length=150
     )
     following = models.ManyToManyField(
@@ -21,6 +21,7 @@ class User(AbstractUser):
         through="Follow",
         related_name="followers",
         symmetrical=False,
+        verbose_name=_('Following'),
     )
 
     USERNAME_FIELD = 'email'
