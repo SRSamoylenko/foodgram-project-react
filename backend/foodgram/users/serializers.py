@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from djoser.serializers import UserSerializer as DjoserUserSerializer
-from djoser.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -15,14 +14,8 @@ User = get_user_model()
 class UserSerializer(DjoserUserSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
-    class Meta:
-        model = User
-        fields = tuple(User.REQUIRED_FIELDS) + (
-            settings.USER_ID_FIELD,
-            settings.LOGIN_FIELD,
-            'is_subscribed',
-        )
-        read_only_fields = (settings.LOGIN_FIELD,)
+    class Meta(DjoserUserSerializer.Meta):
+        fields = DjoserUserSerializer.Meta.fields + ('is_subscribed',)
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user

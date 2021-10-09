@@ -5,7 +5,7 @@ from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import UserSerializer, FollowSerializer, FollowDestroySerializer
+from .serializers import FollowSerializer, FollowDestroySerializer
 from .models import User
 from rest_framework.response import Response
 
@@ -15,14 +15,14 @@ class UserViewSet(DjoserUserViewSet):
         if self.action == 'subscriptions':
             self.permission_classes = settings.PERMISSIONS.get_subscriptions
         elif self.action == 'subscribe':
-            self.permission_classes = settings.PERMISSIONS.create_subscription
+            self.permission_classes = settings.PERMISSIONS.subscribe
         return super().get_permissions()
 
     def get_serializer_class(self):
         if self.action == 'subscriptions':
             return settings.SERIALIZERS.get_subscriptions
         elif self.action == 'subscribe':
-            return settings.SERIALIZERS.create_subscription
+            return settings.SERIALIZERS.subscribe
         return super().get_serializer_class()
 
     @action(
@@ -34,7 +34,7 @@ class UserViewSet(DjoserUserViewSet):
         current_user = request.user
         queryset = current_user.following.all()
         context = {'request': request}
-        serializer = UserSerializer(
+        serializer = self.get_serializer(
             queryset,
             context=context,
             many=True
@@ -53,8 +53,7 @@ class UserViewSet(DjoserUserViewSet):
         }
         return operation[request.method](request, id)
 
-    @staticmethod
-    def create_subscription(request, id=None):
+    def create_subscription(self, request, id=None):
         from_user = request.user
         to_user = get_object_or_404(User, id=id)
         data = {
@@ -68,7 +67,7 @@ class UserViewSet(DjoserUserViewSet):
             follow_serializer.save()
 
         context = {'request': request}
-        user_serializer = UserSerializer(
+        user_serializer = self.get_serializer(
             to_user,
             context=context,
         )
