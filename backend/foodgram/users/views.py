@@ -1,4 +1,5 @@
 from djoser.views import UserViewSet as DjoserUserViewSet
+from djoser.conf import settings
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
@@ -10,6 +11,20 @@ from rest_framework.response import Response
 
 
 class UserViewSet(DjoserUserViewSet):
+    def get_permissions(self):
+        if self.action == 'subscriptions':
+            self.permission_classes = settings.PERMISSIONS.get_subscriptions
+        elif self.action == 'subscribe':
+            self.permission_classes = settings.PERMISSIONS.create_subscription
+        return super().get_permissions()
+
+    def get_serializer_class(self):
+        if self.action == 'subscriptions':
+            return settings.SERIALIZERS.get_subscriptions
+        elif self.action == 'subscribe':
+            return settings.SERIALIZERS.create_subscription
+        return super().get_serializer_class()
+
     @action(
         detail=False,
         methods=('get',),
