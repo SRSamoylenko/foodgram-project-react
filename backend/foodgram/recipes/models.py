@@ -46,7 +46,7 @@ class Recipe(models.Model):
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name=_('Cooking time'),
-        help_text=_('Add cooking time'),
+        help_text=_('Add cooking time in minutes'),
     )
     created = models.DateTimeField(
         auto_now_add=True,
@@ -118,7 +118,10 @@ class RecipeIngredient(models.Model):
         )
 
     def __str__(self):
-        return f'{self.recipe}, {self.ingredient}, {self.amount}'
+        return (
+            f'{self.ingredient.name}, '
+            f'{self.amount} {self.ingredient.measurement_unit}'
+        )
 
 
 class Tag(models.Model):

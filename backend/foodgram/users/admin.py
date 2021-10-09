@@ -1,11 +1,13 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
 from .models import User, Follow
-from .constants import EMPTY_VALUE_MESSAGE
+
+EMPTY_VALUE_MESSAGE = _('-empty-')
 
 
 @admin.register(User)
-class User(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin):
     list_display = (
         'pk',
         'username',
