@@ -60,7 +60,7 @@ class Recipe(models.Model):
     class Meta:
         verbose_name = _('Recipe')
         verbose_name_plural = _('Recipes')
-        ordering = ('-created',)
+        ordering = ('id',)
 
     def __str__(self):
         return f'{self.name}'
@@ -114,7 +114,7 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = _('Recipe ingredient')
         verbose_name_plural = _('Recipe ingredients')
-        ordering = ('-created',)
+        ordering = ('recipe', '-created')
         constraints = (
             models.UniqueConstraint(
                 name='unique_ingredients',
