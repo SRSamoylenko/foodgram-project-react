@@ -8,11 +8,21 @@ from colorfield.fields import ColorField
 User = get_user_model()
 
 
+class UserFavorite(models.Model):
+    user = models.OneToOneField(
+        User,
+        related_name='favorites',
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    recipes = models.ManyToManyField('Recipe')
+
+
 class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         related_name='recipes',
-        verbose_name=_('Follower'),
+        verbose_name=_('Author'),
         on_delete=models.CASCADE,
         help_text=_('Enter recipe author'),
         db_index=True,
@@ -32,12 +42,6 @@ class Recipe(models.Model):
         verbose_name=_('Text'),
         help_text=_('Give recipe description'),
     )
-    ingredients = models.ManyToManyField(
-        'Ingredient',
-        through='RecipeIngredient',
-        verbose_name=_('Ingredients'),
-        help_text=_('Enter recipe ingredients'),
-    )
     tags = models.ManyToManyField(
         'Tag',
         verbose_name=_('Tags'),
@@ -45,7 +49,7 @@ class Recipe(models.Model):
         help_text=_('Add recipe tags'),
     )
     cooking_time = models.PositiveSmallIntegerField(
-        verbose_name=_('Cooking time'),
+        verbose_name=_('Cooking time, min'),
         help_text=_('Add cooking time in minutes'),
     )
     created = models.DateTimeField(
@@ -88,6 +92,7 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         verbose_name=_('Recipe'),
+        related_name='ingredients',
         on_delete=models.CASCADE,
         help_text=_('Enter recipe'),
     )
@@ -131,7 +136,7 @@ class Tag(models.Model):
         unique=True,
         help_text=_('Add tag name'),
     )
-    colour = ColorField(
+    color = ColorField(
         verbose_name=_('Tag color'),
         unique=True,
         help_text=_('Add tag color'),

@@ -4,7 +4,7 @@ from .models import (
     Recipe,
     Ingredient,
     RecipeIngredient,
-    Tag,
+    Tag, UserFavorite,
 )
 
 from django.utils.translation import gettext_lazy as _
@@ -12,22 +12,39 @@ from django.utils.translation import gettext_lazy as _
 EMPTY_VALUE_MESSAGE = _('-empty-')
 
 
-class TagInLine(admin.TabularInline):
-    model = Tag
-    extra = 1
-
-
 class RecipeIngredientInLine(admin.TabularInline):
     model = RecipeIngredient
     extra = 1
 
 
+@admin.register(UserFavorite)
+class UserFavoriteAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'user',
+        'get_recipes',
+    )
+    filter_horizontal = (
+        'recipes',
+    )
+    list_filter = (
+        'user',
+        'recipes',
+    )
+    empty_value_display = EMPTY_VALUE_MESSAGE
+
+    def get_recipes(self, obj):
+        recipes = obj.recipes.all()
+        return ' | '.join([str(recipe) for recipe in recipes])
+
+    get_recipes.short_description = _('Recipes')
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'pk'
-        'author',
         'name',
+        'author',
         'image',
         'text',
         'get_ingredients',
@@ -35,7 +52,6 @@ class RecipeAdmin(admin.ModelAdmin):
         'cooking_time',
     )
     filter_horizontal = (
-        'ingredients',
         'tags',
     )
     list_filter = (
@@ -46,7 +62,6 @@ class RecipeAdmin(admin.ModelAdmin):
         'text',
     )
     inlines = (
-        TagInLine,
         RecipeIngredientInLine,
     )
     empty_value_display = EMPTY_VALUE_MESSAGE
@@ -59,7 +74,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
     def get_ingredients(self, obj):
         ingredients = obj.ingredients.all()
-        return '\n'.join(ingredients)
+        return ' | '.join([str(ingredient) for ingredient in ingredients])
 
     get_ingredients.short_description = _('Ingredients')
 
@@ -77,25 +92,11 @@ class IngredientAdmin(admin.ModelAdmin):
     empty_value_display = EMPTY_VALUE_MESSAGE
 
 
-@admin.register(RecipeIngredient)
-class RecipeIngredientAdmin(admin.ModelAdmin):
-    list_display = (
-        'recipe',
-        'ingredient',
-        'amount'
-    )
-    list_filter = (
-        'recipe',
-        'ingredient',
-    )
-    empty_value_display = EMPTY_VALUE_MESSAGE
-
-
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'colour',
+        'color',
         'slug',
     )
     empty_value_display = EMPTY_VALUE_MESSAGE
