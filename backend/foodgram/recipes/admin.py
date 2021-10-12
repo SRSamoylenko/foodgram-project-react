@@ -5,6 +5,7 @@ from .models import (
     Ingredient,
     RecipeIngredient,
     Tag, UserFavorite,
+    FavoriteRecipe,
 )
 
 from django.utils.translation import gettext_lazy as _
@@ -17,6 +18,11 @@ class RecipeIngredientInLine(admin.TabularInline):
     extra = 1
 
 
+class FavoriteRecipeInLine(admin.TabularInline):
+    model = FavoriteRecipe
+    extra = 1
+
+
 @admin.register(UserFavorite)
 class UserFavoriteAdmin(admin.ModelAdmin):
     list_display = (
@@ -24,8 +30,8 @@ class UserFavoriteAdmin(admin.ModelAdmin):
         'user',
         'get_recipes',
     )
-    filter_horizontal = (
-        'recipes',
+    inlines = (
+        FavoriteRecipeInLine,
     )
     list_filter = (
         'user',

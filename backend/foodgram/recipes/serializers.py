@@ -5,10 +5,15 @@ from .models import Tag, Ingredient, Recipe, RecipeIngredient
 from .utils import get_decoded_image
 
 
-class TagSerializer(serializers.ModelSerializer):
+class TagExplicitSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
+
+
+class TagSerializer(serializers.PrimaryKeyRelatedField):
+    def to_representation(self, instance):
+        return TagExplicitSerializer(instance).data
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -26,17 +31,26 @@ class CustomImageField(serializers.ImageField):
         return image
 
 
-class RecipeIngredientListRetrieveSerializer(serializers.ModelSerializer):
-    id = serializers.PrimaryKeyRelatedField(read_only=True)
-    name = serializers.CharField(source='ingredient.name')
-    measurement_unit = serializers.CharField(source='ingredient.measurement_unit')
+class RecipeIngredientExplicitSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(
+        source='ingredient.id',
+        read_only=True,
+    )
+    name = serializers.CharField(
+        source='ingredient.name',
+        read_only=True,
+    )
+    measurement_unit = serializers.CharField(
+        source='ingredient.measurement_unit',
+        read_only=True,
+    )
 
     class Meta:
         model = RecipeIngredient
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
-class RecipeIngredientCreateUpdateSerializer(serializers.ModelSerializer):
+class RecipeIngredientSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(),
     )
@@ -45,44 +59,24 @@ class RecipeIngredientCreateUpdateSerializer(serializers.ModelSerializer):
         model = RecipeIngredient
         fields = ('id', 'amount')
 
+    def to_representation(self, instance):
+        return RecipeIngredientExplicitSerializer(instance).data
 
-class RecipeListRetrieveSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True, read_only=True)
+
+class RecipeSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True, queryset=Tag.objects.all())
     author = settings.SERIALIZERS.user(read_only=True)
-    ingredients = serializers.SerializerMethodField()
+    ingredients = RecipeIngredientSerializer(many=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
+    image = CustomImageField()
 
     class Meta:
         model = Recipe
         exclude = ('created',)
-
-    @staticmethod
-    def get_ingredients(obj):
-        ingredients = obj.ingredients.all().order_by('id')
-        return RecipeIngredientListRetrieveSerializer(ingredients, many=True).data
 
     def get_is_favorited(self, obj):
         return False
 
     def get_is_in_shopping_cart(self, obj):
         return False
-
-
-class RecipeCreateUpdateSerializer(serializers.ModelSerializer):
-    ingredients = RecipeIngredientCreateUpdateSerializer(many=True)
-    tags = serializers.PrimaryKeyRelatedField(
-        queryset=Tag.objects.all(),
-        many=True,
-    )
-    image = CustomImageField()
-
-    class Meta:
-        fields = (
-            'ingredients',
-            'tags',
-            'image',
-            'name',
-            'text',
-            'cooking_time',
-        )

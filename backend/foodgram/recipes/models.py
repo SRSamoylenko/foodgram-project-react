@@ -15,7 +15,38 @@ class UserFavorite(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    recipes = models.ManyToManyField('Recipe')
+    recipes = models.ManyToManyField('Recipe', through='FavoriteRecipe')
+
+
+class FavoriteRecipe(models.Model):
+    user = models.ForeignKey(
+        UserFavorite,
+        related_name='+',
+        verbose_name=_('User'),
+        on_delete=models.CASCADE,
+    )
+    recipe = models.ForeignKey(
+        'Recipe',
+        related_name='+',
+        verbose_name=_('Recipe'),
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        verbose_name = _('User favorite recipe')
+        verbose_name_plural = _('User favorite recipes')
+        constraints = (
+            models.UniqueConstraint(
+                name='unique_favorite',
+                fields=('user', 'recipe'),
+            ),
+        )
+        ordering = ('id',)
+
+    def __str__(self):
+        return (
+            _('{} likes {}').format(self.user, self.recipe)
+        )
 
 
 class Recipe(models.Model):
@@ -82,7 +113,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = _('Ingredient')
         verbose_name_plural = _('Ingredients')
-        ordering = ('name',)
+        ordering = ('id',)
 
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
@@ -114,7 +145,7 @@ class RecipeIngredient(models.Model):
     class Meta:
         verbose_name = _('Recipe ingredient')
         verbose_name_plural = _('Recipe ingredients')
-        ordering = ('recipe', '-created')
+        ordering = ('recipe', 'ingredient')
         constraints = (
             models.UniqueConstraint(
                 name='unique_ingredients',

@@ -6,6 +6,12 @@ from .models import User, Follow
 EMPTY_VALUE_MESSAGE = _('-empty-')
 
 
+class FollowInLine(admin.TabularInline):
+    fk_name = 'from_user'
+    model = Follow
+    extra = 1
+
+
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
@@ -15,6 +21,8 @@ class UserAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
     )
+    inlines = (FollowInLine,)
+
     empty_value_display = EMPTY_VALUE_MESSAGE
 
 

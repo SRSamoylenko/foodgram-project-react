@@ -8,16 +8,15 @@ from .models import (
     Recipe,
 )
 from .serializers import (
-    TagSerializer,
+    TagExplicitSerializer,
     IngredientSerializer,
-    RecipeListRetrieveSerializer,
-    RecipeCreateUpdateSerializer,
+    RecipeSerializer,
 )
 
 
 class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
-    serializer_class = TagSerializer
+    serializer_class = TagExplicitSerializer
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -27,8 +26,4 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-
-    def get_serializer_class(self):
-        if self.request.method in permissions.SAFE_METHODS:
-            return RecipeListRetrieveSerializer
-        return RecipeCreateUpdateSerializer
+    serializer_class = RecipeSerializer

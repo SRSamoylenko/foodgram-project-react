@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
-from django.db import models
+from django.core.exceptions import ValidationError
+from django.db import models, IntegrityError
 from django.utils.translation import gettext_lazy as _
 
 
@@ -63,9 +64,14 @@ class Follow(models.Model):
                 check=~models.Q(from_user=models.F('to_user')),
             ),
         )
-        ordering = ('-created',)
+        ordering = ('id',)
 
     def __str__(self):
         return (
             _('{} follows {}').format(self.from_user, self.to_user)
         )
+
+    def clean(self):
+        if self.from_user == self.to_user:
+            raise ValidationError('User can not follow himself.')
+        return super(Follow, self).clean()
