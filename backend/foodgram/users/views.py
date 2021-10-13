@@ -3,7 +3,6 @@ from djoser.conf import settings
 from rest_framework import status, serializers
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
 
 from .models import User
 from rest_framework.response import Response
@@ -27,7 +26,6 @@ class UserViewSet(DjoserUserViewSet):
     @action(
         detail=False,
         methods=('get',),
-        permission_classes=(IsAuthenticated,)
     )
     def subscriptions(self, request):
         current_user = request.user
@@ -43,7 +41,6 @@ class UserViewSet(DjoserUserViewSet):
     @action(
         detail=True,
         methods=('get', 'delete'),
-        permission_classes=(IsAuthenticated,)
     )
     def subscribe(self, request, id=None):
         operation = {
@@ -60,11 +57,11 @@ class UserViewSet(DjoserUserViewSet):
             user.follows.add(following)
 
         context = {'request': request}
-        user_serializer = self.get_serializer(
+        serializer = self.get_serializer(
             following,
             context=context,
         )
-        return Response(user_serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @staticmethod
     def is_valid_subscription(user, following, raise_exception=True):
@@ -84,6 +81,7 @@ class UserViewSet(DjoserUserViewSet):
 
         if self.is_destroyable_subscription(user, following, raise_exception=True):
             user.follows.remove(following)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     def is_destroyable_subscription(user, following, raise_exception=True):
