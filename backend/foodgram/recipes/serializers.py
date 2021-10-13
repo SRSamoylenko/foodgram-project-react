@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from djoser.conf import settings
+from rest_framework.generics import get_object_or_404
+from drf_extra_fields.fields import Base64ImageField
 
 from .models import Tag, Ingredient, Recipe, RecipeIngredient
-from .utils import get_decoded_image
 
 
 class TagExplicitSerializer(serializers.ModelSerializer):
@@ -20,15 +21,6 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
-
-
-class CustomImageField(serializers.ImageField):
-    def to_internal_value(self, data):
-        try:
-            image = get_decoded_image(data)
-        except UnicodeDecodeError:
-            raise serializers.ValidationError('Wrong image format.')
-        return image
 
 
 class RecipeIngredientExplicitSerializer(serializers.ModelSerializer):
@@ -69,7 +61,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     ingredients = RecipeIngredientSerializer(many=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
-    image = CustomImageField()
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -80,3 +72,36 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_in_shopping_cart(self, obj):
         return False
+
+    def create(self, validated_data):
+        ingredients_data = validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
+
+        recipe = Recipe.objects.create(**validated_data)
+
+        recipe.tags.set(tags)
+        for ingredient_data in ingredients_data:
+            recipe.ingredients.create(
+                ingredient=ingredient_data['id'],
+                amount=ingredient_data['amount'],
+            )
+        return recipe
+
+    def update(self, recipe, validated_data):
+        ingredients_data = validated_data.pop('ingredients')
+        tags = validated_data.pop('tags')
+
+        for field, value in validated_data.items():
+            recipe.__setattr__(field, value)
+
+        recipe.tags.clear()
+        recipe.tags.set(tags)
+
+        recipe.ingredients.all().delete()
+        for ingredient_data in ingredients_data:
+            recipe.ingredients.create(
+                ingredient=ingredient_data['id'],
+                amount=ingredient_data['amount'],
+            )
+        recipe.save()
+        return recipe

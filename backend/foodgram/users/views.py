@@ -1,11 +1,10 @@
 from djoser.views import UserViewSet as DjoserUserViewSet
 from djoser.conf import settings
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
-from .serializers import FollowSerializer, FollowDestroySerializer
 from .models import User
 from rest_framework.response import Response
 
@@ -54,36 +53,42 @@ class UserViewSet(DjoserUserViewSet):
         return operation[request.method](request, id)
 
     def create_subscription(self, request, id=None):
-        from_user = request.user
-        to_user = get_object_or_404(User, id=id)
-        data = {
-            'from_user': from_user.id,
-            'to_user': to_user.id,
-        }
-        follow_serializer = FollowSerializer(
-            data=data,
-        )
-        if follow_serializer.is_valid(raise_exception=True):
-            follow_serializer.save()
+        user = request.user
+        following = get_object_or_404(User, id=id)
+
+        if self.is_valid_subscription(user, following, raise_exception=True):
+            user.follows.add(following)
 
         context = {'request': request}
         user_serializer = self.get_serializer(
-            to_user,
+            following,
             context=context,
         )
         return Response(user_serializer.data, status=status.HTTP_200_OK)
 
     @staticmethod
-    def destroy_subscription(request, id=None):
-        from_user = request.user
-        to_user = get_object_or_404(User, id=id)
-        data = {
-            'from_user': from_user.id,
-            'to_user': to_user.id,
-        }
-        follow_serializer = FollowDestroySerializer(
-            data=data,
-        )
-        if follow_serializer.is_valid(raise_exception=True):
-            follow_serializer.destroy()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def is_valid_subscription(user, following, raise_exception=True):
+        if user == following:
+            if raise_exception:
+                raise serializers.ValidationError('Self follows are forbidden.')
+            return False
+        if following in user.follows:
+            if raise_exception:
+                raise serializers.ValidationError('Cannot follow twice.')
+            return False
+        return True
+
+    def destroy_subscription(self, request, id=None):
+        user = request.user
+        following = get_object_or_404(User, id=id)
+
+        if self.is_destroyable_subscription(user, following, raise_exception=True):
+            user.follows.remove(following)
+
+    @staticmethod
+    def is_destroyable_subscription(user, following, raise_exception=True):
+        if following not in user.follows:
+            if raise_exception:
+                raise serializers.ValidationError('Subscription not existed.')
+            return False
+        return True

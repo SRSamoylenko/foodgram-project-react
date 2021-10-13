@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
-from django.db import models, IntegrityError
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
@@ -17,7 +17,7 @@ class User(AbstractUser):
         verbose_name=_('Last name'),
         max_length=150,
     )
-    following = models.ManyToManyField(
+    follows = models.ManyToManyField(
         to='self',
         through='Follow',
         related_name='followers',
