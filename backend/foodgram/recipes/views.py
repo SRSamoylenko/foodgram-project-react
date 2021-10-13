@@ -14,6 +14,7 @@ from .serializers import (
     TagExplicitSerializer,
     IngredientSerializer,
     RecipeSerializer,
+    RecipeFavoriteSerializer,
 )
 
 
@@ -30,6 +31,16 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+
+    def get_permissions(self):
+        if self.action == 'favorite':
+            self.permission_classes = [permissions.IsAuthenticated],
+        return super().get_permissions()
+
+    def get_serializer_class(self):
+        if self.action == 'favorite':
+            return RecipeFavoriteSerializer
+        return super().get_serializer_class()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -73,7 +84,6 @@ class RecipeViewSet(ModelViewSet):
 
         if self.can_remove_favorite(user, recipe, raise_exception=True):
             user.favorites.remove(recipe)
-
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod

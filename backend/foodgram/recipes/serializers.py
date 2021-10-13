@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from djoser.conf import settings
-from rest_framework.generics import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 
 from .models import Tag, Ingredient, Recipe, RecipeIngredient
@@ -105,3 +104,9 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
         recipe.save()
         return recipe
+
+
+class RecipeFavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
