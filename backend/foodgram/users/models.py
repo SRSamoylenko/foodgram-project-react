@@ -32,6 +32,11 @@ class User(AbstractUser):
         'last_name',
     )
 
+    class Meta(AbstractUser.Meta):
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
+        ordering = ('id',)
+
 
 class Follow(models.Model):
     from_user = models.ForeignKey(

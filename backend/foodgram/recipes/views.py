@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
-from rest_framework import permissions, status, serializers
+from rest_framework import permissions, status
 from django.utils.translation import gettext_lazy as _
 
 from .models import (
@@ -35,7 +36,7 @@ class RecipeViewSet(ModelViewSet):
 
     def get_permissions(self):
         if self.action == 'favorite':
-            self.permission_classes = [permissions.IsAuthenticated],
+            self.permission_classes = [permissions.IsAuthenticated]
         return super().get_permissions()
 
     def get_serializer_class(self):
@@ -50,16 +51,16 @@ class RecipeViewSet(ModelViewSet):
         detail=True,
         methods=('get', 'delete'),
     )
-    def favorite(self, request, id=None):
+    def favorite(self, request, pk=None):
         operation = {
             'GET': self.add_favorite,
             'DELETE': self.remove_favorite,
         }
-        return operation[request.method](request, id)
+        return operation[request.method](request, pk)
 
-    def add_favorite(self, request, id=None):
+    def add_favorite(self, request, pk=None):
         user = request.user
-        recipe = get_object_or_404(Recipe, id=id)
+        recipe = get_object_or_404(Recipe, pk=pk)
 
         if self.can_add_favorite(user, recipe, raise_exception=True):
             user.favorites.recipes.add(recipe)
@@ -73,9 +74,9 @@ class RecipeViewSet(ModelViewSet):
 
     @staticmethod
     def can_add_favorite(user, recipe, raise_exception=True):
-        if recipe in user.favorites.recipes:
+        if recipe in user.favorites.recipes.all():
             if raise_exception:
-                raise serializers.ValidationError(_('Cannot add to favorites twice.'))
+                raise ValidationError(_('Cannot add to favorites twice.'))
             return False
         return True
 
@@ -89,8 +90,8 @@ class RecipeViewSet(ModelViewSet):
 
     @staticmethod
     def can_remove_favorite(user, recipe, raise_exception=True):
-        if recipe not in user.favorites.recipes:
+        if recipe not in user.favorites.recipes.all():
             if raise_exception:
-                raise serializers.ValidationError(_('Not a favorite recipe.'))
+                raise ValidationError(_('Not a favorite recipe.'))
             return False
         return True

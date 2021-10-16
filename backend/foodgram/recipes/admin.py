@@ -4,7 +4,8 @@ from .models import (
     Recipe,
     Ingredient,
     RecipeIngredient,
-    Tag, UserFavorite,
+    Tag,
+    UserFavorites,
     FavoriteRecipe,
 )
 
@@ -23,10 +24,9 @@ class FavoriteRecipeInLine(admin.TabularInline):
     extra = 1
 
 
-@admin.register(UserFavorite)
+@admin.register(UserFavorites)
 class UserFavoriteAdmin(admin.ModelAdmin):
     list_display = (
-        'pk',
         'user',
         'get_recipes',
     )

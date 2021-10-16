@@ -8,7 +8,7 @@ from colorfield.fields import ColorField
 User = get_user_model()
 
 
-class UserFavorite(models.Model):
+class UserFavorites(models.Model):
     user = models.OneToOneField(
         User,
         related_name='favorites',
@@ -17,11 +17,16 @@ class UserFavorite(models.Model):
     )
     recipes = models.ManyToManyField('Recipe', through='FavoriteRecipe')
 
+    class Meta:
+        verbose_name = _('User favorite recipe')
+        verbose_name_plural = _('User favorite recipes')
+        ordering = ('user',)
+
 
 class FavoriteRecipe(models.Model):
     user = models.ForeignKey(
-        User,
-        related_name='favorites',
+        UserFavorites,
+        related_name='+',
         verbose_name=_('User'),
         on_delete=models.CASCADE,
     )

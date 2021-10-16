@@ -1,7 +1,8 @@
 from djoser.views import UserViewSet as DjoserUserViewSet
 from djoser.conf import settings
-from rest_framework import status, serializers
+from rest_framework import status
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 
 from .models import User
@@ -67,11 +68,11 @@ class UserViewSet(DjoserUserViewSet):
     def is_valid_subscription(user, following, raise_exception=True):
         if user == following:
             if raise_exception:
-                raise serializers.ValidationError('Self follows are forbidden.')
+                raise ValidationError('Self follows are forbidden.')
             return False
-        if following in user.follows:
+        if following in user.follows.all():
             if raise_exception:
-                raise serializers.ValidationError('Cannot follow twice.')
+                raise ValidationError('Cannot follow twice.')
             return False
         return True
 
@@ -85,8 +86,8 @@ class UserViewSet(DjoserUserViewSet):
 
     @staticmethod
     def is_destroyable_subscription(user, following, raise_exception=True):
-        if following not in user.follows:
+        if following not in user.follows.all():
             if raise_exception:
-                raise serializers.ValidationError('Subscription not existed.')
+                raise ValidationError('Subscription not existed.')
             return False
         return True

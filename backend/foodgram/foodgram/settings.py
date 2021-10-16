@@ -86,7 +86,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
     ),
-    'EXCEPTION_HANDLER': 'api.views.exception_handler',
+    'EXCEPTION_HANDLER': 'foodgram.utils.custom_exception_handler',
     'UPLOADED_FILES_USE_URL': True,
 }
 
