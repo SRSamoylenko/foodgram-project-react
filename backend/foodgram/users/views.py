@@ -29,12 +29,12 @@ class UserViewSet(DjoserUserViewSet):
     )
     def subscriptions(self, request):
         current_user = request.user
-        queryset = current_user.following.all()
+        queryset = current_user.follows.all()
         context = {'request': request}
         serializer = self.get_serializer(
             queryset,
             context=context,
-            many=True
+            many=True,
         )
         return Response(serializer.data, status=status.HTTP_200_OK)
 

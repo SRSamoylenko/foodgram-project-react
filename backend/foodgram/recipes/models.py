@@ -20,8 +20,8 @@ class UserFavorite(models.Model):
 
 class FavoriteRecipe(models.Model):
     user = models.ForeignKey(
-        UserFavorite,
-        related_name='+',
+        User,
+        related_name='favorites',
         verbose_name=_('User'),
         on_delete=models.CASCADE,
     )

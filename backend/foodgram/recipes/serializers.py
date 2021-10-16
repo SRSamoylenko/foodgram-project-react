@@ -68,7 +68,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, recipe):
         user = self.context['request'].user
-        return recipe in user.favorites.recipes
+        return recipe in user.favorites.recipes.all()
 
     def get_is_in_shopping_cart(self, recipe):
         return False
@@ -108,14 +108,24 @@ class RecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipeShortSerializer(serializers.ModelSerializer):
+    image = Base64ImageField()
+
     class Meta:
         model = Recipe
-        read_only_fields = ('id', 'name', 'image', 'cooking_time')
+        fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class UserSerializer(settings.SERIALIZERS.user):
-    recipes = RecipeShortSerializer(read_only=True)
-    recipes_count = serializers.SerializerMethodField
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta(settings.SERIALIZERS.user.Meta):
+        fields = settings.SERIALIZERS.user.Meta.fields + (
+            'recipes', 'recipes_count'
+        )
+
+    def get_recipes(self, user):
+        return RecipeShortSerializer(user.recipes.all(), many=True, context=self.context).data
 
     @staticmethod
     def get_recipes_count(user):

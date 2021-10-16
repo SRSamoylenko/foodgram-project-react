@@ -87,6 +87,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'EXCEPTION_HANDLER': 'api.views.exception_handler',
+    'UPLOADED_FILES_USE_URL': True,
 }
 
 DJOSER = {
