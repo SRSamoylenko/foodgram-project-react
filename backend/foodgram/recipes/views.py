@@ -4,6 +4,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework import permissions, status, serializers
+from django.utils.translation import gettext_lazy as _
 
 from .models import (
     Tag,
@@ -14,7 +15,7 @@ from .serializers import (
     TagExplicitSerializer,
     IngredientSerializer,
     RecipeSerializer,
-    RecipeFavoriteSerializer,
+    RecipeShortSerializer,
 )
 
 
@@ -39,7 +40,7 @@ class RecipeViewSet(ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'favorite':
-            return RecipeFavoriteSerializer
+            return RecipeShortSerializer
         return super().get_serializer_class()
 
     def perform_create(self, serializer):
@@ -61,7 +62,7 @@ class RecipeViewSet(ModelViewSet):
         recipe = get_object_or_404(Recipe, id=id)
 
         if self.can_add_favorite(user, recipe, raise_exception=True):
-            user.favorites.add(recipe)
+            user.favorites.recipes.add(recipe)
 
         context = {'request': request}
         serializer = self.get_serializer(
@@ -72,9 +73,9 @@ class RecipeViewSet(ModelViewSet):
 
     @staticmethod
     def can_add_favorite(user, recipe, raise_exception=True):
-        if recipe in user.favorites:
+        if recipe in user.favorites.recipes:
             if raise_exception:
-                raise serializers.ValidationError('Cannot add to favorites twice.')
+                raise serializers.ValidationError(_('Cannot add to favorites twice.'))
             return False
         return True
 
@@ -83,13 +84,13 @@ class RecipeViewSet(ModelViewSet):
         recipe = get_object_or_404(Recipe, id=id)
 
         if self.can_remove_favorite(user, recipe, raise_exception=True):
-            user.favorites.remove(recipe)
+            user.favorites.recipes.remove(recipe)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
     def can_remove_favorite(user, recipe, raise_exception=True):
-        if recipe not in user.favorites:
+        if recipe not in user.favorites.recipes:
             if raise_exception:
-                raise serializers.ValidationError('Not a favorite recipe.')
+                raise serializers.ValidationError(_('Not a favorite recipe.'))
             return False
         return True

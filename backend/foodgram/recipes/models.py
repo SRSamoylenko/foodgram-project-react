@@ -15,7 +15,7 @@ class UserFavorite(models.Model):
         on_delete=models.CASCADE,
         primary_key=True,
     )
-    favorites = models.ManyToManyField('Recipe', through='FavoriteRecipe')
+    recipes = models.ManyToManyField('Recipe', through='FavoriteRecipe')
 
 
 class FavoriteRecipe(models.Model):

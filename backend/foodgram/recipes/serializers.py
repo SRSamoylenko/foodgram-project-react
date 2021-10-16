@@ -66,10 +66,11 @@ class RecipeSerializer(serializers.ModelSerializer):
         model = Recipe
         exclude = ('created',)
 
-    def get_is_favorited(self, obj):
-        return False
+    def get_is_favorited(self, recipe):
+        user = self.context['request'].user
+        return recipe in user.favorites.recipes
 
-    def get_is_in_shopping_cart(self, obj):
+    def get_is_in_shopping_cart(self, recipe):
         return False
 
     def create(self, validated_data):
@@ -106,7 +107,16 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
 
-class RecipeFavoriteSerializer(serializers.ModelSerializer):
+class RecipeShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
+        read_only_fields = ('id', 'name', 'image', 'cooking_time')
+
+
+class UserSerializer(settings.SERIALIZERS.user):
+    recipes = RecipeShortSerializer(read_only=True)
+    recipes_count = serializers.SerializerMethodField
+
+    @staticmethod
+    def get_recipes_count(user):
+        return user.recipes.count()

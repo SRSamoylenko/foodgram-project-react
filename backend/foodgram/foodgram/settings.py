@@ -94,8 +94,8 @@ DJOSER = {
     'SERIALIZERS': {
         'user': 'users.serializers.UserSerializer',
         'current_user': 'users.serializers.UserSerializer',
-        'get_subscriptions': 'users.serializers.UserSerializer',
-        'subscribe': 'users.serializers.UserSerializer',
+        'get_subscriptions': 'recipes.serializers.UserSerializer',
+        'subscribe': 'recipes.serializers.UserSerializer',
     },
     'PERMISSIONS': {
         'user_list': ['rest_framework.permissions.AllowAny'],
