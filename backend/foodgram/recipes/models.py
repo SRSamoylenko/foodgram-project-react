@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 
 from colorfield.fields import ColorField
 
-
 User = get_user_model()
 
 
@@ -12,6 +11,7 @@ class UserFavorites(models.Model):
     user = models.OneToOneField(
         User,
         related_name='favorites',
+        verbose_name=_('User'),
         on_delete=models.CASCADE,
         primary_key=True,
     )
@@ -21,6 +21,9 @@ class UserFavorites(models.Model):
         verbose_name = _('User favorite recipe')
         verbose_name_plural = _('User favorite recipes')
         ordering = ('user',)
+
+    def __str__(self):
+        return _('{} favorite recipes').format(self.user)
 
 
 class FavoriteRecipe(models.Model):
@@ -51,6 +54,55 @@ class FavoriteRecipe(models.Model):
     def __str__(self):
         return (
             _('{} likes {}').format(self.user, self.recipe)
+        )
+
+
+class UserShoppingCart(models.Model):
+    user = models.OneToOneField(
+        User,
+        verbose_name=_('User'),
+        related_name='shopping_cart',
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    recipes = models.ManyToManyField('Recipe', through='ShoppingCartRecipe')
+
+    class Meta:
+        verbose_name = _('User shopping cart')
+        ordering = ('user',)
+
+    def __str__(self):
+        return _('{} shopping cart').format(self.user)
+
+
+class ShoppingCartRecipe(models.Model):
+    shopping_cart = models.ForeignKey(
+        UserShoppingCart,
+        related_name='+',
+        verbose_name=_('Shopping cart'),
+        on_delete=models.CASCADE,
+    )
+    recipe = models.ForeignKey(
+        'Recipe',
+        related_name='+',
+        verbose_name=_('Recipe'),
+        on_delete=models.CASCADE,
+    )
+
+    class Meta:
+        verbose_name = _('Shopping cart recipe')
+        verbose_name_plural = _('Shopping cart recipes')
+        constraints = (
+            models.UniqueConstraint(
+                name='unique_recipe_for_shopping_cart',
+                fields=('shopping_cart', 'recipe'),
+            ),
+        )
+        ordering = ('id',)
+
+    def __str__(self):
+        return (
+            _('{} added to {}').format(self.recipe, self.shopping_cart)
         )
 
 
