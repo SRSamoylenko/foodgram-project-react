@@ -74,6 +74,11 @@ class UserShoppingCart(models.Model):
     def __str__(self):
         return _('{} shopping cart').format(self.user)
 
+    def get_ingredients_to_buy(self):
+        import logging
+        logging.info(self.recipes)
+        recipes = self.recipes
+
 
 class ShoppingCartRecipe(models.Model):
     shopping_cart = models.ForeignKey(

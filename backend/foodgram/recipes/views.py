@@ -147,3 +147,11 @@ class RecipeViewSet(ModelViewSet):
                 raise ValidationError(_('Not in shopping cart.'))
             return False
         return True
+
+    @action(
+        detail=False,
+        methods=('get',),
+    )
+    def download_shopping_cart(self, request):
+        user = request.user
+        user.shopping_cart.get_ingredients_to_buy()
