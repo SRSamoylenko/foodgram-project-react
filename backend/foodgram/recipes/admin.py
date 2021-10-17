@@ -7,6 +7,8 @@ from .models import (
     Tag,
     UserFavorites,
     FavoriteRecipe,
+    ShoppingCartRecipe,
+    UserShoppingCart,
 )
 
 from django.utils.translation import gettext_lazy as _
@@ -24,6 +26,11 @@ class FavoriteRecipeInLine(admin.TabularInline):
     extra = 1
 
 
+class ShoppingCartInLine(admin.TabularInline):
+    model = ShoppingCartRecipe
+    extra = 1
+
+
 @admin.register(UserFavorites)
 class UserFavoriteAdmin(admin.ModelAdmin):
     list_display = (
@@ -32,6 +39,28 @@ class UserFavoriteAdmin(admin.ModelAdmin):
     )
     inlines = (
         FavoriteRecipeInLine,
+    )
+    list_filter = (
+        'user',
+        'recipes',
+    )
+    empty_value_display = EMPTY_VALUE_MESSAGE
+
+    def get_recipes(self, obj):
+        recipes = obj.recipes.all()
+        return ' | '.join([str(recipe) for recipe in recipes])
+
+    get_recipes.short_description = _('Recipes')
+
+
+@admin.register(UserShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'get_recipes',
+    )
+    inlines = (
+        ShoppingCartInLine,
     )
     list_filter = (
         'user',
