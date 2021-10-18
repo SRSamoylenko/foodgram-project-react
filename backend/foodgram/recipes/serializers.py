@@ -2,7 +2,7 @@ from rest_framework import serializers
 from djoser.conf import settings
 from drf_extra_fields.fields import Base64ImageField
 
-from .models import Tag, Ingredient, Recipe, RecipeIngredient, UserFavorites
+from .models import Tag, Ingredient, Recipe, RecipeIngredient, UserFavorites, UserShoppingCart
 
 
 class TagExplicitSerializer(serializers.ModelSerializer):
@@ -70,11 +70,15 @@ class RecipeSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if user.is_anonymous:
             return False
-        favorites, created = UserFavorites.objects.get_or_create(user=user)
+        favorites, created = UserFavorites.objects.prefetch_related('recipes').get_or_create(user=user)
         return recipe in favorites.recipes.all()
 
     def get_is_in_shopping_cart(self, recipe):
-        return False
+        user = self.context['request'].user
+        if user.is_anonymous:
+            return False
+        shopping_cart, created = UserShoppingCart.objects.prefetch_related('recipes').get_or_create(user=user)
+        return recipe in shopping_cart.recipes.all()
 
     def create(self, validated_data):
         ingredients_data = validated_data.pop('ingredients')
@@ -108,6 +112,24 @@ class RecipeSerializer(serializers.ModelSerializer):
             )
         recipe.save()
         return recipe
+
+    @staticmethod
+    def validate_ingredients(ingredients):
+        checked_ingredients = set()
+        for ingredient in ingredients:
+            if ingredient['id'].id in checked_ingredients:
+                raise serializers.ValidationError('Ingredients have to be unique.')
+            checked_ingredients.add(ingredient['id'].id)
+        return ingredients
+
+    @staticmethod
+    def validate_tags(tags):
+        checked_tags = set()
+        for tag in tags:
+            if tag.id in checked_tags:
+                raise serializers.ValidationError('Tags have to be unique.')
+            checked_tags.add(tag.id)
+        return tags
 
 
 class RecipeShortSerializer(serializers.ModelSerializer):

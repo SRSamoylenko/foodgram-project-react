@@ -1,7 +1,6 @@
-from reportlab.lib import colors
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.platypus import SimpleDocTemplate, Table
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
@@ -12,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 from django.http import FileResponse
 
 import io
-from reportlab.pdfgen import canvas
 
 from .models import (
     Tag,
