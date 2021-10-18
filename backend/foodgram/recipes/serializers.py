@@ -2,7 +2,7 @@ from rest_framework import serializers
 from djoser.conf import settings
 from drf_extra_fields.fields import Base64ImageField
 
-from .models import Tag, Ingredient, Recipe, RecipeIngredient
+from .models import Tag, Ingredient, Recipe, RecipeIngredient, UserFavorites
 
 
 class TagExplicitSerializer(serializers.ModelSerializer):
@@ -68,7 +68,10 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def get_is_favorited(self, recipe):
         user = self.context['request'].user
-        return recipe in user.favorites.recipes.all()
+        if user.is_anonymous:
+            return False
+        favorites, created = UserFavorites.objects.get_or_create(user=user)
+        return recipe in favorites.recipes.all()
 
     def get_is_in_shopping_cart(self, recipe):
         return False

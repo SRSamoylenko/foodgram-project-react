@@ -1,5 +1,9 @@
+from collections import namedtuple, defaultdict
+from typing import Dict, Tuple, List
+
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy as _
 
 from colorfield.fields import ColorField
@@ -74,10 +78,27 @@ class UserShoppingCart(models.Model):
     def __str__(self):
         return _('{} shopping cart').format(self.user)
 
-    def get_ingredients_to_buy(self):
-        import logging
-        logging.info(self.recipes)
-        recipes = self.recipes
+    def get_ingredients_to_buy(self) -> List[Tuple[str, int, str]]:
+        """
+        Return list of ingredients with their amount from shopping cart.
+        """
+        ingredients = (
+            RecipeIngredient.objects
+            .filter(recipe__in=self.recipes.all())
+            .select_related('ingredient').all()
+        )
+        IngredientTuple = namedtuple('IngredientTuple', 'name measurement_unit')
+        counter = defaultdict(int)
+
+        for ingredient in ingredients:
+            counter[
+                IngredientTuple(
+                    ingredient.ingredient.name,
+                    ingredient.ingredient.measurement_unit
+                )
+            ] += ingredient.amount
+        return [(ingredient.name, amount, ingredient.measurement_unit)
+                for ingredient, amount in counter.items()]
 
 
 class ShoppingCartRecipe(models.Model):

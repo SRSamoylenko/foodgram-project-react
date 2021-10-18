@@ -16,4 +16,4 @@ class UserSerializer(DjoserUserSerializer):
         user = self.context['request'].user
         if user.is_anonymous:
             return False
-        return user in obj.follows.all()
+        return obj in user.follows.all()
