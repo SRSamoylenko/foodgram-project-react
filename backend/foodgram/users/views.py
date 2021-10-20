@@ -37,7 +37,8 @@ class UserViewSet(DjoserUserViewSet):
             context=context,
             many=True,
         )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        self.paginate_queryset(queryset)
+        return self.get_paginated_response(serializer.data)
 
     @action(
         detail=True,

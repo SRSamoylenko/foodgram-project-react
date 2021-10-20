@@ -88,6 +88,7 @@ REST_FRAMEWORK = {
     ),
     'EXCEPTION_HANDLER': 'foodgram.utils.custom_exception_handler',
     'UPLOADED_FILES_USE_URL': True,
+    'DEFAULT_PAGINATION_CLASS': 'foodgram.pagination.CustomPageNumberPagination',
 }
 
 DJOSER = {
