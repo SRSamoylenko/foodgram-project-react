@@ -9,6 +9,8 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 from rest_framework import permissions, status
 from django.utils.translation import gettext_lazy as _
 from django.http import FileResponse
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import RecipeFilter
 
 import io
 
@@ -40,6 +42,8 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
 
     def get_permissions(self):
         if self.action == 'favorite':
