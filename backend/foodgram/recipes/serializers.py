@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, exceptions
 from djoser.conf import settings
 from drf_extra_fields.fields import Base64ImageField
 
@@ -44,6 +44,9 @@ class RecipeIngredientExplicitSerializer(serializers.ModelSerializer):
 class RecipeIngredientSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(),
+    )
+    amount = serializers.IntegerField(
+        min_value=1,
     )
 
     class Meta:
@@ -150,7 +153,16 @@ class UserSerializer(settings.SERIALIZERS.user):
         )
 
     def get_recipes(self, user):
-        return RecipeShortSerializer(user.recipes.all(), many=True, context=self.context).data
+        queryset = user.recipes.all()
+        limit = self.context['request'].query_params.get('recipes_limit')
+        if limit is not None:
+            try:
+                limit = int(limit)
+            except ValueError:
+                raise exceptions.ParseError('recipes_limit query param must be an integer.')
+            else:
+                queryset = queryset[:limit]
+        return RecipeShortSerializer(queryset, many=True, context=self.context).data
 
     @staticmethod
     def get_recipes_count(user):
