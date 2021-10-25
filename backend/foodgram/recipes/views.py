@@ -10,7 +10,7 @@ from rest_framework import permissions, status
 from django.utils.translation import gettext_lazy as _
 from django.http import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
-from .filters import RecipeFilter
+from .filters import RecipeFilter, IngredientSearchFilter
 
 import io
 
@@ -37,6 +37,8 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     pagination_class = None
+    filter_backends = (IngredientSearchFilter,)
+    search_fields = ('^name',)
 
 
 class RecipeViewSet(ModelViewSet):
