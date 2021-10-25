@@ -85,12 +85,14 @@ class RecipeAdmin(admin.ModelAdmin):
         'get_ingredients',
         'get_tags',
         'cooking_time',
+        'get_added_to_favorites',
     )
     filter_horizontal = (
         'tags',
     )
     list_filter = (
         'author',
+        'tags',
     )
     search_fields = (
         'name',
@@ -112,6 +114,11 @@ class RecipeAdmin(admin.ModelAdmin):
         return ' | '.join([str(ingredient) for ingredient in ingredients])
 
     get_ingredients.short_description = _('Ingredients')
+
+    def get_added_to_favorites(self, obj):
+        return FavoriteRecipe.objects.filter(recipe=obj).count()
+
+    get_added_to_favorites.short_description = _('Added to favorites')
 
 
 @admin.register(Ingredient)

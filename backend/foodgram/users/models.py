@@ -37,6 +37,9 @@ class User(AbstractUser):
         verbose_name_plural = _('Users')
         ordering = ('id',)
 
+    def __str__(self):
+        return self.username
+
 
 class Follow(models.Model):
     from_user = models.ForeignKey(

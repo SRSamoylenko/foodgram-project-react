@@ -21,6 +21,10 @@ class UserAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
     )
+    list_filter = (
+        'email',
+        'username',
+    )
     inlines = (FollowInLine,)
 
     empty_value_display = EMPTY_VALUE_MESSAGE
