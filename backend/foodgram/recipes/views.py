@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from django.http import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import RecipeFilter, IngredientSearchFilter
+from .permissions import IsOwnerOrReadOnly
 
 import io
 
@@ -44,10 +45,13 @@ class IngredientViewSet(ReadOnlyModelViewSet):
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    permission_classes = (IsOwnerOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
     def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes = [permissions.IsAuthenticated]
         if self.action == 'favorite':
             self.permission_classes = [permissions.IsAuthenticated]
         elif self.action == 'shopping_cart':
