@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
-from rest_framework import permissions, status
+from rest_framework import permissions, status, filters
 from django.utils.translation import gettext_lazy as _
 from django.http import FileResponse
 from django_filters.rest_framework import DjangoFilterBackend
@@ -46,8 +46,9 @@ class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = (IsOwnerOrReadOnly,)
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_class = RecipeFilter
+    ordering = ('-created',)
 
     def get_permissions(self):
         if self.action == 'create':

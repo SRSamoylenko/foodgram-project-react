@@ -57,7 +57,7 @@ class FavoriteRecipe(models.Model):
 
     def __str__(self):
         return (
-            _('{} likes {}').format(self.user, self.recipe)
+            _('{} likes {}').format(self.user.user, self.recipe)
         )
 
 
