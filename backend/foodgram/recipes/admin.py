@@ -1,17 +1,8 @@
 from django.contrib import admin
-
-from .models import (
-    Recipe,
-    Ingredient,
-    RecipeIngredient,
-    Tag,
-    UserFavorites,
-    FavoriteRecipe,
-    ShoppingCartRecipe,
-    UserShoppingCart,
-)
-
 from django.utils.translation import gettext_lazy as _
+
+from .models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
+                     ShoppingCartRecipe, Tag, UserFavorites, UserShoppingCart)
 
 EMPTY_VALUE_MESSAGE = _('-empty-')
 

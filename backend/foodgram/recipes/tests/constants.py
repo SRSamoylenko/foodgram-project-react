@@ -1,3 +1,4 @@
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 TEST_USER = {
@@ -125,3 +126,19 @@ TAG_FIELDS = {
         'help_text': _('Add slug'),
     },
 }
+
+TAG_LIST_URL = reverse(
+    'recipes:tag-list',
+)
+TAG_DETAIL_URL = reverse(
+    'recipes:tag-detail',
+    kwargs={'pk': 1},
+)
+
+INGREDIENT_LIST_URL = reverse(
+    'recipes:ingredient-list',
+)
+INGREDIENT_DETAIL_URL = reverse(
+    'recipes:ingredient-detail',
+    kwargs={'pk': 1},
+)

@@ -1,12 +1,10 @@
-from collections import namedtuple, defaultdict
-from typing import Dict, Tuple, List
-
-from django.contrib.auth import get_user_model
-from django.db import models
-from django.db.models import Prefetch
-from django.utils.translation import gettext_lazy as _
+from collections import defaultdict, namedtuple
+from typing import List, Tuple
 
 from colorfield.fields import ColorField
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 User = get_user_model()
 
@@ -87,7 +85,9 @@ class UserShoppingCart(models.Model):
             .filter(recipe__in=self.recipes.all())
             .select_related('ingredient').all()
         )
-        IngredientTuple = namedtuple('IngredientTuple', 'name measurement_unit')
+        IngredientTuple = namedtuple(
+            'IngredientTuple', 'name measurement_unit',
+        )
         counter = defaultdict(int)
 
         for ingredient in ingredients:

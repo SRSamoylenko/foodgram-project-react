@@ -1,7 +1,7 @@
-from django.urls import path, include
+from django.urls import include, path
 
 urlpatterns = [
-    path('', include('users.urls')),
-    path('', include('recipes.urls')),
+    path('', include('users.urls', namespace='users')),
+    path('', include('recipes.urls', namespace='recipes')),
     path('auth/', include('djoser.urls.authtoken')),
 ]

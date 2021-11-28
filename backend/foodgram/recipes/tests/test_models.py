@@ -1,8 +1,8 @@
-from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.test import TestCase
 
-from ..models import Recipe, Ingredient, Tag, RecipeIngredient, UserFavorites, FavoriteRecipe, UserShoppingCart, \
-    ShoppingCartRecipe
+from ..models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
+                      ShoppingCartRecipe, Tag, UserFavorites, UserShoppingCart)
 from . import constants as _
 
 User = get_user_model()
@@ -46,7 +46,9 @@ class IngredientTest(TestCase):
     def test_object_name(self):
         """Check Ingredient __str__ output."""
         test_ingredient = Ingredient.objects.create(**_.TEST_INGREDIENT)
-        expected_output = _.INGREDIENT_STR_OUTPUT.format(**test_ingredient.__dict__)
+        expected_output = _.INGREDIENT_STR_OUTPUT.format(
+            **test_ingredient.__dict__
+        )
         self.assertEqual(expected_output, str(test_ingredient))
 
 
@@ -58,7 +60,9 @@ class RecipeIngredientTest(TestCase):
                 for option, expected_value in expected_values.items():
                     with self.subTest(option=option):
                         self.assertEqual(
-                            RecipeIngredient._meta.get_field(field).__dict__[option],
+                            (RecipeIngredient._meta
+                                .get_field(field)
+                                .__dict__[option]),
                             expected_value
                         )
 
@@ -123,7 +127,9 @@ class FavoriteRecipeTest(TestCase):
             user=test_user_favorites,
             recipe=test_recipe,
         )
-        expected_output = _.FAVORITE_RECIPE_STR_OUTPUT.format(test_user, test_recipe)
+        expected_output = _.FAVORITE_RECIPE_STR_OUTPUT.format(
+            test_user, test_recipe,
+        )
         self.assertEqual(expected_output, str(test_favorite_recipe))
 
 
@@ -132,7 +138,9 @@ class UserShoppingCartTest(TestCase):
         """Check UserShoppingCart __str__ output."""
         test_user = User.objects.create(**_.TEST_USER)
         test_recipe = Recipe.objects.create(author=test_user, **_.TEST_RECIPE)
-        test_user_shopping_cart = UserShoppingCart.objects.create(user=test_user)
+        test_user_shopping_cart = (
+            UserShoppingCart.objects.create(user=test_user)
+        )
         test_user_shopping_cart.recipes.add(test_recipe)
         expected_output = _.USER_SHOPPING_CART_STR_OUTPUT.format(test_user)
         self.assertEqual(expected_output, str(test_user_shopping_cart))
@@ -143,10 +151,14 @@ class ShoppingCartRecipeTest(TestCase):
         """Check ShoppingCartRecipe __str__ output."""
         test_user = User.objects.create(**_.TEST_USER)
         test_recipe = Recipe.objects.create(author=test_user, **_.TEST_RECIPE)
-        test_user_shopping_cart = UserShoppingCart.objects.create(user=test_user)
+        test_user_shopping_cart = UserShoppingCart.objects.create(
+            user=test_user
+        )
         test_shopping_cart_recipe = ShoppingCartRecipe.objects.create(
             shopping_cart=test_user_shopping_cart,
             recipe=test_recipe,
         )
-        expected_output = _.SHOPPING_CART_STR_OUTPUT.format(test_recipe, test_user_shopping_cart)
+        expected_output = _.SHOPPING_CART_STR_OUTPUT.format(
+            test_recipe, test_user_shopping_cart,
+        )
         self.assertEqual(expected_output, str(test_shopping_cart_recipe))

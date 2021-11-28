@@ -1,5 +1,6 @@
 from django_filters import rest_framework as filters
 from rest_framework.filters import SearchFilter
+
 from .models import Recipe, Tag, UserFavorites, UserShoppingCart
 
 
@@ -21,7 +22,9 @@ class RecipeFilter(filters.FilterSet):
         if user.is_anonymous:
             favorite_recipes = {}
         else:
-            favorites, created = UserFavorites.objects.prefetch_related('recipes').get_or_create(user=user)
+            favorites, created = UserFavorites.objects.prefetch_related(
+                'recipes'
+            ).get_or_create(user=user)
             favorite_recipes = favorites.recipes.all()
         if not is_favorited:
             return queryset.exclude(id__in=favorite_recipes)
@@ -32,7 +35,9 @@ class RecipeFilter(filters.FilterSet):
         if user.is_anonymous:
             shopping_cart_recipes = {}
         else:
-            shopping_cart, created = UserShoppingCart.objects.prefetch_related('recipes').get_or_create(user=user)
+            shopping_cart, created = UserShoppingCart.objects.prefetch_related(
+                'recipes'
+            ).get_or_create(user=user)
             shopping_cart_recipes = shopping_cart.recipes.all()
         if not is_in_shopping_cart:
             return queryset.exclude(id__in=shopping_cart_recipes)

@@ -1,31 +1,23 @@
+import io
+
+from django.http import FileResponse
+from django.utils.translation import gettext_lazy as _
+from django_filters.rest_framework import DjangoFilterBackend
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Table
+from rest_framework import filters, permissions, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
-from rest_framework import permissions, status, filters
-from django.utils.translation import gettext_lazy as _
-from django.http import FileResponse
-from django_filters.rest_framework import DjangoFilterBackend
-from .filters import RecipeFilter, IngredientSearchFilter
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+
+from .filters import IngredientSearchFilter, RecipeFilter
+from .models import Ingredient, Recipe, Tag, UserFavorites, UserShoppingCart
 from .permissions import IsOwnerOrReadOnly
-
-import io
-
-from .models import (
-    Tag,
-    Ingredient,
-    Recipe, UserFavorites, UserShoppingCart,
-)
-from .serializers import (
-    TagExplicitSerializer,
-    IngredientSerializer,
-    RecipeSerializer,
-    RecipeShortSerializer,
-)
+from .serializers import (IngredientSerializer, RecipeSerializer,
+                          RecipeShortSerializer, TagExplicitSerializer)
 
 
 class TagViewSet(ReadOnlyModelViewSet):
@@ -83,7 +75,9 @@ class RecipeViewSet(ModelViewSet):
         return operation[request.method](request, pk)
 
     def add_favorite(self, request, pk=None):
-        user_favorites, created = UserFavorites.objects.prefetch_related('recipes').get_or_create(user=request.user)
+        user_favorites, created = UserFavorites.objects.prefetch_related(
+            'recipes'
+        ).get_or_create(user=request.user)
         recipe = get_object_or_404(Recipe, pk=pk)
 
         if self.can_add_favorite(user_favorites, recipe, raise_exception=True):
@@ -105,7 +99,9 @@ class RecipeViewSet(ModelViewSet):
         return True
 
     def remove_favorite(self, request, id=None):
-        favorites, created = UserFavorites.objects.prefetch_related('recipes').get_or_create(user=request.user)
+        favorites, created = UserFavorites.objects.prefetch_related(
+            'recipes'
+        ).get_or_create(user=request.user)
         recipe = get_object_or_404(Recipe, id=id)
 
         if self.can_remove_favorite(favorites, recipe, raise_exception=True):
@@ -132,10 +128,14 @@ class RecipeViewSet(ModelViewSet):
         return operation[request.method](request, pk)
 
     def add_to_shopping_cart(self, request, pk=None):
-        shopping_cart, created = UserShoppingCart.objects.prefetch_related('recipes').get_or_create(user=request.user)
+        shopping_cart, created = UserShoppingCart.objects.prefetch_related(
+            'recipes'
+        ).get_or_create(user=request.user)
         recipe = get_object_or_404(Recipe, pk=pk)
 
-        if self.can_add_to_shopping_cart(shopping_cart, recipe, raise_exception=True):
+        if self.can_add_to_shopping_cart(
+                shopping_cart, recipe, raise_exception=True
+        ):
             shopping_cart.recipes.add(recipe)
 
         context = {'request': request}
@@ -154,15 +154,21 @@ class RecipeViewSet(ModelViewSet):
         return True
 
     def remove_from_shopping_cart(self, request, pk=None):
-        shopping_cart, created = UserShoppingCart.objects.prefetch_related('recipes').get_or_create(user=request.user)
+        shopping_cart, created = UserShoppingCart.objects.prefetch_related(
+            'recipes'
+        ).get_or_create(user=request.user)
         recipe = get_object_or_404(Recipe, pk=pk)
 
-        if self.can_remove_from_shopping_cart(shopping_cart, recipe, raise_exception=True):
+        if self.can_remove_from_shopping_cart(
+                shopping_cart, recipe, raise_exception=True
+        ):
             shopping_cart.recipes.remove(recipe)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @staticmethod
-    def can_remove_from_shopping_cart(shopping_cart, recipe, raise_exception=True):
+    def can_remove_from_shopping_cart(
+            shopping_cart, recipe, raise_exception=True
+    ):
         if recipe not in shopping_cart.recipes.all():
             if raise_exception:
                 raise ValidationError(_('Not in shopping cart.'))
@@ -175,7 +181,9 @@ class RecipeViewSet(ModelViewSet):
     )
     def download_shopping_cart(self, request):
         user = request.user
-        shopping_cart, created = UserShoppingCart.objects.get_or_create(user=user)
+        shopping_cart, created = UserShoppingCart.objects.get_or_create(
+            user=user
+        )
         ingredients = shopping_cart.get_ingredients_to_buy()
 
         buffer = io.BytesIO()
@@ -194,4 +202,8 @@ class RecipeViewSet(ModelViewSet):
         doc.build([table])
         buffer.seek(0)
 
-        return FileResponse(buffer, as_attachment=True, filename='shopping_cart.pdf')
+        return FileResponse(
+            buffer,
+            as_attachment=True,
+            filename='shopping_cart.pdf'
+        )

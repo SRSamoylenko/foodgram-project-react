@@ -1,12 +1,12 @@
-from djoser.views import UserViewSet as DjoserUserViewSet
 from djoser.conf import settings
+from djoser.views import UserViewSet as DjoserUserViewSet
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 
 from .models import User
-from rest_framework.response import Response
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -81,7 +81,9 @@ class UserViewSet(DjoserUserViewSet):
         user = request.user
         following = get_object_or_404(User, id=id)
 
-        if self.is_destroyable_subscription(user, following, raise_exception=True):
+        if self.is_destroyable_subscription(
+                user, following, raise_exception=True
+        ):
             user.follows.remove(following)
         return Response(status=status.HTTP_204_NO_CONTENT)
 

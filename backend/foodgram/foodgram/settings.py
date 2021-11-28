@@ -71,16 +71,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': (
+            'django.contrib.auth'
+            '.password_validation'
+            '.UserAttributeSimilarityValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': (
+            'django.contrib.auth'
+            '.password_validation'
+            '.MinimumLengthValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': (
+            'django.contrib.auth'
+            '.password_validation'
+            '.CommonPasswordValidator'
+        ),
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': (
+            'django.contrib.auth'
+            '.password_validation'
+            '.NumericPasswordValidator'
+        ),
     },
 ]
 
@@ -90,7 +106,9 @@ REST_FRAMEWORK = {
     ),
     'EXCEPTION_HANDLER': 'foodgram.utils.custom_exception_handler',
     'UPLOADED_FILES_USE_URL': True,
-    'DEFAULT_PAGINATION_CLASS': 'foodgram.pagination.CustomPageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': (
+        'foodgram.pagination.CustomPageNumberPagination'
+    ),
 }
 
 DJOSER = {

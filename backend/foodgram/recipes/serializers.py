@@ -1,8 +1,9 @@
-from rest_framework import serializers, exceptions
 from djoser.conf import settings
 from drf_extra_fields.fields import Base64ImageField
+from rest_framework import exceptions, serializers
 
-from .models import Tag, Ingredient, Recipe, RecipeIngredient, UserFavorites, UserShoppingCart
+from .models import (Ingredient, Recipe, RecipeIngredient, Tag, UserFavorites,
+                     UserShoppingCart)
 
 
 class TagExplicitSerializer(serializers.ModelSerializer):
@@ -73,14 +74,18 @@ class RecipeSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if user.is_anonymous:
             return False
-        favorites, created = UserFavorites.objects.prefetch_related('recipes').get_or_create(user=user)
+        favorites, _ = UserFavorites.objects.prefetch_related(
+            'recipes'
+        ).get_or_create(user=user)
         return recipe in favorites.recipes.all()
 
     def get_is_in_shopping_cart(self, recipe):
         user = self.context['request'].user
         if user.is_anonymous:
             return False
-        shopping_cart, created = UserShoppingCart.objects.prefetch_related('recipes').get_or_create(user=user)
+        shopping_cart, _ = UserShoppingCart.objects.prefetch_related(
+            'recipes'
+        ).get_or_create(user=user)
         return recipe in shopping_cart.recipes.all()
 
     def create(self, validated_data):
@@ -121,7 +126,9 @@ class RecipeSerializer(serializers.ModelSerializer):
         checked_ingredients = set()
         for ingredient in ingredients:
             if ingredient['id'].id in checked_ingredients:
-                raise serializers.ValidationError('Ingredients have to be unique.')
+                raise serializers.ValidationError(
+                    'Ingredients have to be unique.'
+                )
             checked_ingredients.add(ingredient['id'].id)
         return ingredients
 
@@ -159,10 +166,16 @@ class UserSerializer(settings.SERIALIZERS.user):
             try:
                 limit = int(limit)
             except ValueError:
-                raise exceptions.ParseError('recipes_limit query param must be an integer.')
+                raise exceptions.ParseError(
+                    'recipes_limit query param must be an integer.'
+                )
             else:
                 queryset = queryset[:limit]
-        return RecipeShortSerializer(queryset, many=True, context=self.context).data
+        return RecipeShortSerializer(
+            queryset,
+            many=True,
+            context=self.context
+        ).data
 
     @staticmethod
     def get_recipes_count(user):

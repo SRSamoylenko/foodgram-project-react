@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import User, Follow
+from .models import Follow, User
 
 EMPTY_VALUE_MESSAGE = _('-empty-')
 
