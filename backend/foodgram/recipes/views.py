@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
-from reportlab.platypus import SimpleDocTemplate, Table
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Table
 from rest_framework import filters, permissions, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -88,7 +88,7 @@ class RecipeViewSet(ModelViewSet):
             recipe,
             context=context,
         )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @staticmethod
     def can_add_favorite(favorites, recipe, raise_exception=True):
@@ -119,6 +119,7 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=True,
         methods=('get', 'delete'),
+        url_name='shopping-cart',
     )
     def shopping_cart(self, request, pk=None):
         operation = {
@@ -143,7 +144,7 @@ class RecipeViewSet(ModelViewSet):
             recipe,
             context=context,
         )
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @staticmethod
     def can_add_to_shopping_cart(shopping_cart, recipe, raise_exception=True):
@@ -178,6 +179,7 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=False,
         methods=('get',),
+        url_name='download-shopping-cart',
     )
     def download_shopping_cart(self, request):
         user = request.user
@@ -189,17 +191,20 @@ class RecipeViewSet(ModelViewSet):
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer)
         pdfmetrics.registerFont(TTFont('Tahoma', 'Tahoma.ttf'))
-        table = Table(
-            ingredients,
-            hAlign='LEFT',
-            style=[
-                ('FONT', (0, 0), (-1, -1), 'Tahoma'),
-                ('ALIGN', (0, 0), (0, -1), 'LEFT'),
-                ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
-                ('ALIGN', (2, 0), (2, -1), 'LEFT'),
-            ]
-        )
-        doc.build([table])
+        if ingredients:
+            table = Table(
+                ingredients,
+                hAlign='LEFT',
+                style=[
+                    ('FONT', (0, 0), (-1, -1), 'Tahoma'),
+                    ('ALIGN', (0, 0), (0, -1), 'LEFT'),
+                    ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
+                    ('ALIGN', (2, 0), (2, -1), 'LEFT'),
+                ]
+            )
+            doc.build([table])
+        else:
+            doc.build([Paragraph(_('Shopping cart is empty.'))])
         buffer.seek(0)
 
         return FileResponse(

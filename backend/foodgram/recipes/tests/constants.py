@@ -5,11 +5,25 @@ TEST_USER = {
     'first_name': 'test',
     'last_name': 'test',
     'email': 'test@test.com',
+    'username': 'test',
+}
+
+TEST_USER_2 = {
+    'first_name': 'test_2',
+    'last_name': 'test_2',
+    'email': 'test_2@test.com',
+    'username': 'test_2',
 }
 
 TEST_RECIPE = {
     'name': 'test',
     'text': 'test',
+    'cooking_time': 5,
+}
+
+TEST_RECIPE_2 = {
+    'name': 'test_2',
+    'text': 'test_2',
     'cooking_time': 5,
 }
 
@@ -140,5 +154,26 @@ INGREDIENT_LIST_URL = reverse(
 )
 INGREDIENT_DETAIL_URL = reverse(
     'recipes:ingredient-detail',
+    kwargs={'pk': 1},
+)
+
+RECIPE_LIST_URL = reverse(
+    'recipes:recipe-list',
+)
+RECIPE_DETAIL_URL = reverse(
+    'recipes:recipe-detail',
+    kwargs={'pk': 1},
+)
+
+DOWNLOAD_SHOPPING_CART_URL = reverse(
+    'recipes:recipe-download-shopping-cart'
+)
+SHOPPING_CART_URL = reverse(
+    'recipes:recipe-shopping-cart',
+    kwargs={'pk': 1},
+)
+
+FAVORITE_URL = reverse(
+    'recipes:recipe-favorite',
     kwargs={'pk': 1},
 )
