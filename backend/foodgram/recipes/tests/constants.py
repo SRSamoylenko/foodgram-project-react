@@ -177,3 +177,36 @@ FAVORITE_URL = reverse(
     'recipes:recipe-favorite',
     kwargs={'pk': 1},
 )
+
+TAG_SERIALIZER_FIELDS = (
+    'id',
+    'name',
+    'color',
+    'slug',
+)
+
+RECIPE_SERIALIZER_FIELDS = (
+    'id',
+    'tags',
+    'author',
+    'ingredients',
+    'is_favorited',
+    'is_in_shopping_cart',
+    'name',
+    'image',
+    'text',
+    'cooking_time',
+)
+
+RECIPE_SHOPPING_CART_SERIALIZER_FIELDS = (
+    'id',
+    'name',
+    'image',
+    'cooking_time',
+)
+
+INGREDIENT_SERIALIZER = (
+    'id',
+    'name',
+    'measurement_unit',
+)
