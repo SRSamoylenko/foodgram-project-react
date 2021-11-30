@@ -1,11 +1,7 @@
 from django.test import TestCase
 
-from ..serializers import (
-    TagExplicitSerializer,
-    IngredientSerializer,
-    RecipeSerializer,
-    RecipeShortSerializer,
-)
+from ..serializers import (IngredientSerializer, RecipeSerializer,
+                           RecipeShortSerializer, TagExplicitSerializer)
 from . import constants as _
 
 
