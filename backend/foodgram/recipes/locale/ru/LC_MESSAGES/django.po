@@ -1,0 +1,226 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-11-30 03:22+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: admin.py:7
+msgid "-empty-"
+msgstr "-пусто-"
+
+#: admin.py:44 admin.py:66 apps.py:7 models.py:176
+msgid "Recipes"
+msgstr "Рецепты"
+
+#: admin.py:101 models.py:161 models.py:266 tests/constants.py:82
+msgid "Tags"
+msgstr "Тэги"
+
+#: admin.py:107 models.py:198
+msgid "Ingredients"
+msgstr "Ингредиенты"
+
+#: admin.py:112
+msgid "Added to favorites"
+msgstr "Добавлено в избранное"
+
+#: models.py:16 models.py:35 models.py:65
+msgid "User"
+msgstr "Пользователь"
+
+#: models.py:23 models.py:46
+msgid "User favorite recipe"
+msgstr "Избранный рецепт пользователя"
+
+#: models.py:24 models.py:47
+msgid "User favorite recipes"
+msgstr "Избранные рецепты пользователя"
+
+#: models.py:28 tests/constants.py:53
+msgid "{} favorite recipes"
+msgstr "Избранные рецепты пользователя {}"
+
+#: models.py:41 models.py:114 models.py:175 models.py:208
+#: tests/constants.py:111
+msgid "Recipe"
+msgstr "Рецепт"
+
+#: models.py:58 tests/constants.py:55
+msgid "{} likes {}"
+msgstr "Пользователю {} нравится {}"
+
+#: models.py:73
+msgid "User shopping cart"
+msgstr "Корзина покупок"
+
+#: models.py:77 tests/constants.py:57
+msgid "{} shopping cart"
+msgstr "Корзина покупок пользователя {}"
+
+#: models.py:108
+msgid "Shopping cart"
+msgstr "Корзина покупок"
+
+#: models.py:119
+msgid "Shopping cart recipe"
+msgstr "Рецепт из корзины покупок"
+
+#: models.py:120
+msgid "Shopping cart recipes"
+msgstr "Рецепты из корзины покупок"
+
+#: models.py:131 tests/constants.py:59
+msgid "{} added to {}"
+msgstr "Рецепт {} добавлен в козину {}"
+
+#: models.py:139 tests/constants.py:63
+msgid "Author"
+msgstr "Автор"
+
+#: models.py:141 tests/constants.py:64
+msgid "Enter recipe author"
+msgstr "Введите автора рецепта"
+
+#: models.py:145 tests/constants.py:68
+msgid "Recipe name"
+msgstr "Имя рецепта"
+
+#: models.py:147 tests/constants.py:70
+msgid "Enter recipe name"
+msgstr "Введите имя рецепта"
+
+#: models.py:151 tests/constants.py:73
+msgid "Image"
+msgstr "Изображение"
+
+#: models.py:153 tests/constants.py:75
+msgid "Enter recipe image"
+msgstr "Добавьте изображение рецепта"
+
+#: models.py:156 tests/constants.py:78
+msgid "Text"
+msgstr "Текст"
+
+#: models.py:157 tests/constants.py:79
+msgid "Give recipe description"
+msgstr "Добавьте описание рецепта"
+
+#: models.py:163 tests/constants.py:84
+msgid "Add recipe tags"
+msgstr "Добавьте тэги рецепта"
+
+#: models.py:166 tests/constants.py:87
+msgid "Cooking time, min"
+msgstr "Время приготовления, мин"
+
+#: models.py:167 tests/constants.py:88
+msgid "Add cooking time in minutes"
+msgstr "Введите время приготовления в минутах"
+
+#: models.py:185 tests/constants.py:98
+msgid "Ingredient name"
+msgstr "Название ингредиента"
+
+#: models.py:187 tests/constants.py:100
+msgid "Enter ingredient name"
+msgstr "Введите название ингредиента"
+
+#: models.py:191 tests/constants.py:103
+msgid "Measurement unit"
+msgstr "Единица измерения"
+
+#: models.py:193 tests/constants.py:105
+msgid "Enter measurement unit"
+msgstr "Введите единицу измерения"
+
+#: models.py:197 models.py:215 tests/constants.py:115
+msgid "Ingredient"
+msgstr "Ингредиент"
+
+#: models.py:211 tests/constants.py:112
+msgid "Enter recipe"
+msgstr "Добавьте рецепт"
+
+#: models.py:217 tests/constants.py:116
+msgid "Enter ingredient"
+msgstr "Добавьте ингредиент"
+
+#: models.py:220 tests/constants.py:119
+msgid "Amount"
+msgstr "Количество"
+
+#: models.py:221 tests/constants.py:120
+msgid "Enter amount"
+msgstr "Введите количество"
+
+#: models.py:229
+msgid "Recipe ingredient"
+msgstr "Ингредиент рецепта"
+
+#: models.py:230
+msgid "Recipe ingredients"
+msgstr "Ингредиенты рецепта"
+
+#: models.py:248 tests/constants.py:130
+msgid "Tag name"
+msgstr "Название тэга"
+
+#: models.py:251 tests/constants.py:132
+msgid "Add tag name"
+msgstr "Введите название тэга"
+
+#: models.py:254 tests/constants.py:135
+msgid "Tag color"
+msgstr "Цвет тэга"
+
+#: models.py:256 tests/constants.py:136
+msgid "Add tag color"
+msgstr "Добавьте цвет тэга"
+
+#: models.py:259 tests/constants.py:139
+msgid "Slug"
+msgstr "Слаг"
+
+#: models.py:261 tests/constants.py:140
+msgid "Add slug"
+msgstr "Добавьте слаг"
+
+#: models.py:265
+msgid "Tag"
+msgstr "Тэг"
+
+#: views.py:97
+msgid "Cannot add to favorites twice."
+msgstr "Нельзя добавить рецепт в избранное дважды."
+
+#: views.py:115
+msgid "Not a favorite recipe."
+msgstr "Рецепт не находится в избранном."
+
+#: views.py:153
+msgid "Cannot add to shopping cart twice."
+msgstr "Нельзя добавить рецепт в корзину дважды."
+
+#: views.py:175
+msgid "Not in shopping cart."
+msgstr "Рецепт не в корзине."
+
+#: views.py:207
+msgid "Shopping cart is empty."
+msgstr "Корзина пуста."

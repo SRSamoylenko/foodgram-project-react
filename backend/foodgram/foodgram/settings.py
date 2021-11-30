@@ -128,7 +128,7 @@ DJOSER = {
     'HIDE_USERS': False,
 }
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 
 TIME_ZONE = 'UTC'
 
@@ -143,3 +143,7 @@ STATIC_ROOT = os.path.join('static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join('media')
+
+LOCALE_PATHS = (
+    '/locale/',
+)
