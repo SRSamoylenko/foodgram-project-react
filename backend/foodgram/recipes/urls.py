@@ -4,22 +4,22 @@ from .views import IngredientViewSet, RecipeViewSet, TagViewSet
 
 app_name = 'recipes'
 
-router = DefaultRouter()
+router_v1 = DefaultRouter()
 
-router.register(
+router_v1.register(
     r'tags',
     TagViewSet,
     basename='tag',
 )
-router.register(
+router_v1.register(
     r'ingredients',
     IngredientViewSet,
     basename='ingredient',
 )
-router.register(
+router_v1.register(
     r'recipes',
     RecipeViewSet,
     basename='recipe',
 )
 
-urlpatterns = router.urls
+urlpatterns = router_v1.urls

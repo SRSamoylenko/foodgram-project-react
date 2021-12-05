@@ -26,7 +26,6 @@ class UserAdmin(admin.ModelAdmin):
         'username',
     )
     inlines = (FollowInLine,)
-
     empty_value_display = EMPTY_VALUE_MESSAGE
 
 
