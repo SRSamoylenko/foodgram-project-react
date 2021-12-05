@@ -27,6 +27,7 @@ Frontend: JavaScript, React
    ```
    pip install -r requirements.txt
    ```
+4. Coздайте файл `.env` по примеру `.env.example`
 4. Перейдите в папку `foodgram` внутри `backend`
 5. Запустите проект:
    ```
