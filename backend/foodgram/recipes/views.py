@@ -190,13 +190,13 @@ class RecipeViewSet(ModelViewSet):
 
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer)
-        pdfmetrics.registerFont(TTFont('Tahoma', 'Tahoma.ttf'))
+        pdfmetrics.registerFont(TTFont('DejaVu Serif', 'DejaVuSerif.ttf'))
         if ingredients:
             table = Table(
                 ingredients,
                 hAlign='LEFT',
                 style=[
-                    ('FONT', (0, 0), (-1, -1), 'Tahoma'),
+                    ('FONT', (0, 0), (-1, -1), 'DejaVu Serif'),
                     ('ALIGN', (0, 0), (0, -1), 'LEFT'),
                     ('ALIGN', (1, 0), (1, -1), 'RIGHT'),
                     ('ALIGN', (2, 0), (2, -1), 'LEFT'),

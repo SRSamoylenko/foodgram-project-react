@@ -185,7 +185,6 @@ class Ingredient(models.Model):
         verbose_name=_('Ingredient name'),
         max_length=150,
         help_text=_('Enter ingredient name'),
-        unique=True,
     )
     measurement_unit = models.CharField(
         verbose_name=_('Measurement unit'),
@@ -197,6 +196,12 @@ class Ingredient(models.Model):
         verbose_name = _('Ingredient')
         verbose_name_plural = _('Ingredients')
         ordering = ('id',)
+        constraints = (
+            models.UniqueConstraint(
+                name='unique_ingredient_unit',
+                fields=('name', 'measurement_unit'),
+            ),
+        )
 
     def __str__(self):
         return f'{self.name}, {self.measurement_unit}'
