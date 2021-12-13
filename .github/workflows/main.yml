@@ -24,7 +24,7 @@ jobs:
 
       - name: Test with flake8 and django tests
         run: |
-          flake8 --exclude */migrations
+          python -m flake8
           touch .env
           echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
           echo DEBUG=${{ secrets.DEBUG }} >> .env
