@@ -25,18 +25,18 @@ jobs:
       - name: Test with flake8 and django tests
         run: |
           python -m flake8
-          touch .env
-          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
-          echo DEBUG=${{ secrets.DEBUG }} >> .env
-          echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
-          echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
-          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
-          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
-          cd foodgram
-          python manage.py test
+#          touch .env
+#          echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+#          echo DEBUG=${{ secrets.DEBUG }} >> .env
+#          echo ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }} >> .env
+#          echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
+#          echo DB_NAME=${{ secrets.DB_NAME }} >> .env
+#          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+#          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+#          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+#          echo DB_PORT=${{ secrets.DB_PORT }} >> .env
+#          cd foodgram
+#          python manage.py test
 
 #  build_and_push:
 #    name: Push Docker image to Docker Hub
