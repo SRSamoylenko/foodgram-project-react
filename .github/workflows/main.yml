@@ -111,7 +111,7 @@ jobs:
   send_message:
     name: send result of deploy message to telegram
     runs-on: ubuntu-latest
-    needs: build_and_push
+    needs: deploy
     steps:
       - name: send message
         uses: appleboy/telegram-action@master
