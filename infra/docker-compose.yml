@@ -5,14 +5,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
-      - ../backend/.env
+      - ./.env
   web:
     image: srsamoylenko/foodgram-backend:latest
     restart: always
     depends_on:
       - db
     env_file:
-      - ../backend/.env
+      - ./.env
     volumes:
       - ../data/media:/backend/data/media/
   frontend:
