@@ -97,6 +97,7 @@ jobs:
             sudo docker-compose stop
             sudo docker-compose rm srsamoylenko_web_1
             sudo docker-compose rm srsamoylenko_frontend_1
+            sudo killall nginx
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
