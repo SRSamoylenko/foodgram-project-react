@@ -6,6 +6,7 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
+
   web:
     image: srsamoylenko/foodgram-backend:latest
     restart: always
@@ -14,11 +15,14 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ../data/media:/backend/data/media/
+      - static_volume:/app/static
+      - media_volume:/app/media
+
   frontend:
     image: srsamoylenko/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
+
   nginx:
     image: nginx:1.19.3
     ports:
@@ -28,9 +32,12 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/redoc.html:/usr/share/nginx/html/api/docs/redoc.html
       - ../docs/openapi-schema.yml:/usr/share/nginx/html/api/docs/openapi-schema.yml
-      - ../data/media:/usr/share/nginx/html/media/
+      - static_volume:/var/html/static/
+      - media_volume:/var/html/media/
     depends_on:
       - web
 
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:
