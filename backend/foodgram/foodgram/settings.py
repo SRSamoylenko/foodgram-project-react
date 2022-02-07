@@ -114,9 +114,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': (
         'foodgram.pagination.CustomPageNumberPagination'
     ),
-    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.HostNameVersioning',
-    'DEFAULT_VERSION': 'v1',
-    'ALLOWED_VERSIONS': ('v1',),
+    # 'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.HostNameVersioning',
+    # 'DEFAULT_VERSION': 'v1',
+    # 'ALLOWED_VERSIONS': ('v1',),
 }
 
 DJOSER = {
