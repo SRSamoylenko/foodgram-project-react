@@ -1,45 +1,37 @@
+[![foodgram workflow](https://github.com/SRSamoylenko/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/SRSamoylenko/foodgram-project-react/actions/workflows/main.yml)
 # Приложение "Продуктовый помощник"
 Пользователи могут регистрироваться, создавать свои рецепты, подписываться на публикации других пользователей, добавлять рецепты в избранное, формировать корзину покупок и скачивать ее.
+
+Приложение доступно по адресу: http://foodgram.sytes.net/
+API приложения - http://foodgram.sytes.net/api
+Документация API - http://foodgram.sytes.net/api/docs/redoc.html
 
 ## Стек технологий
 Backend: python3, Django Rest Framework, django-filter, Djoser, Docker, postgres, Pillow
 Frontend: JavaScript, React
+CI/CD: docker-compose + GitHub Actions
 
-ВНИМАНИЕ! На данный момент frontend и backend приложения функционируют отдельно.
 
-## Для запуска frontend приложения:
-1. Проверьте установлен ли Docker.
-2. Клонируйте репозиторий.
-3. В папке `infra` выполните команду:
-    ```
-    docker-compose up
-    ```
-4. Проект запустится по адресу `http://localhost`, посмотреть спецификацию API сможете по адресу: `http://localhost/api/docs/`
-
-## Для запуска backend приложения:
-1. Перейдите в папку `backend`
-2. Создайте и запустите виртуальное окружение:
-   ```
-   python3 -m venv venv
-   . venv/bin/activate
-   ```
-3. Установите зависимости:
-   ```
-   pip install -r requirements.txt
-   ```
-4. Coздайте файл `.env` по примеру `.env.example`
+## Для запуска у себя на сервере:
+1. Сделайте форк и склонируйте репозиторий
+2. Скопируйте на сервер файлы `docker-compose.yml` и `nginx.conf` и папки `frontend` и `docs`.
+3. В GitHub установите секреты репозитория по аналогии с файлом `.env.example`
+4. В файле `nginx.conf` установите `server_name`
 4. Перейдите в папку `foodgram` внутри `backend`
-5. Запустите проект:
-   ```
-   python manage.py runserver
-   ```
-6. Приложение доступно по адресу: `http://127.0.0.1/`.
+5. Сделайте push в репозиторий
    
 ### Опционально:
-1. Для доступа к админ панели API создайте суперпользователя:
+1. Откройте консоль web-приложения, для этого на сервере введите команду:
+   ```
+   docker exec -it <название контейнера> bash
+   ```
+2. Для доступа к админ панели приложения создайте суперпользователя:
     ```
     python manage.py createsuperuser
     ```
+   и следуйте командам.
+   Админ панель доступна по адресу: `<имя хоста>/admin`
+   
 2. Можете загрузить в бд предзаготовленный список ингредиентов:
     ```
     python manage.py loaddata ../../data/ingredients.json
