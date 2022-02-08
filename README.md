@@ -3,8 +3,14 @@
 Пользователи могут регистрироваться, создавать свои рецепты, подписываться на публикации других пользователей, добавлять рецепты в избранное, формировать корзину покупок и скачивать ее.
 
 Приложение доступно по адресу: http://foodgram.sytes.net/
+
 API приложения - http://foodgram.sytes.net/api
+
 Документация API - http://foodgram.sytes.net/api/docs/redoc.html
+
+Для доступа к админ-панели:
+- email: `admin@admin.com`
+- пароль: `admin`
 
 ## Стек технологий
 Backend: python3, Django Rest Framework, django-filter, Djoser, Docker, postgres, Pillow
@@ -30,6 +36,7 @@ CI/CD: docker-compose + GitHub Actions
     python manage.py createsuperuser
     ```
    и следуйте командам.
+   
    Админ панель доступна по адресу: `<имя хоста>/admin`
    
 2. Можете загрузить в бд предзаготовленный список ингредиентов:
